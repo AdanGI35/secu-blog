@@ -1,0 +1,18 @@
+{
+  "error-message": "Une erreur s'est produite. Veuillez réessayer.",
+  "blog-title": "Blog Sécurisé",
+  "register-heading": "Inscription",
+  "csrf-token": "Votre_Jeton_CSRF",
+  "username-label": "Nom d'utilisateur",
+  "email-label": "Email",
+  "password-label": "Mot de passe",
+  "confirm-password-label": "Confirmer le mot de passe",
+  "register-button": "S'inscrire",
+  "login-heading": "Connexion",
+  "login-button": "Se connecter",
+  "home": "Accueil",
+  "categories": "Catégories",
+  "logout": "Déconnexion",
+  "latest-posts-heading": "Derniers articles",
+  "read-the-post": "Lire l'article"
+}

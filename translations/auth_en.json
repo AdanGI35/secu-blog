@@ -1,0 +1,30 @@
+{
+    "error-message": "An error occurred. Please try again.",
+    "blog-title": "Secured Blog",
+    "register-heading": "Register",
+    "csrf-token": "Your_CSRF_Token",
+    "username-label": "Username",
+    "email-label": "Email",
+    "password-label": "Password",
+    "confirm-password-label": "Confirm Password",
+    "register-button": "Register",
+    "error-message": "An error occurred. Please try again.",
+    "blog-title": "Secured Blog",
+    "login-heading": "Login",
+    "csrf-token": "Your_CSRF_Token",
+    "email-label": "Email",
+    "password-label": "Password",
+    "login-button": "Login",
+     "home": "Home",
+    "categories": "Categories",
+    "register": "Register",
+    "login": "Login",
+    "logout": "Logout",
+    "blog-title": "Secured Blog",
+    "latest-posts-heading": "Latest posts",
+    "read-the-post": "Read the post",
+    "blog-title": "Secured Blog",
+    "read-the-post": "Read the post"
+
+
+}

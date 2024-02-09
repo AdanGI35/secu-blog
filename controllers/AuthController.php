@@ -1,5 +1,4 @@
 <?php
-
 class AuthController extends AbstractController
 {
     public function login() : void
@@ -9,35 +8,48 @@ class AuthController extends AbstractController
 
     public function checkLogin() : void
     {
+
         if(isset($_POST["email"]) && isset($_POST["password"]))
         {
-            $um = new UserManager();
-            $email = htmlspecialchars($_POST['email']);
-            $password = htmlspecialchars($_POST['password']);
+            $tokenManager = new CSRFTokenManager();
 
-            $user = $um->findByEmail($email);
-
-            if($user->getId() !== null)
+            if(isset($_POST["csrf-token"]) && $tokenManager->validateCSRFToken($_POST["csrf-token"]))
             {
-                if(password_verify($password, $user->getPassword()))
+                $um = new UserManager();
+                $user = $um->findByEmail($_POST["email"]);
+
+                if($user !== null)
                 {
-                    $_SESSION["user"] = $user;
-                    $this->redirect("index.php");
+                    if(password_verify($_POST["password"], $user->getPassword()))
+                    {
+                        $_SESSION["user"] = $user->getId();
+
+                        unset($_SESSION["error-message"]);
+
+                        $this->redirect("index.php");
+                    }
+                    else
+                    {
+                        $_SESSION["error-message"] = "Invalid login information";
+                        $this->redirect("index.php?route=login");
+                    }
                 }
                 else
                 {
-                    header("Location: index.php?route=login");
+                    $_SESSION["error-message"] = "Invalid login information";
+                    $this->redirect("index.php?route=login");
                 }
             }
             else
             {
-                header("Location: index.php?route=login");
+                $_SESSION["error-message"] = "Invalid CSRF token";
+                $this->redirect("index.php?route=login");
             }
         }
         else
         {
-            header("Location: index.php?route=login");
-            exit();
+            $_SESSION["error-message"] = "Missing fields";
+            $this->redirect("index.php?route=login");
         }
     }
 
@@ -48,35 +60,65 @@ class AuthController extends AbstractController
 
     public function checkRegister() : void
     {
-        $um = new UserManager();
-    
-        if(isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"]))
-        {   
-            $username = htmlspecialchars($_POST['username']);
-            $password = htmlspecialchars($_POST['password']);
-            $email = htmlspecialchars($_POST['email']);
-            $hashPassword = password_hash($password, PASSWORD_BCRYPT);
-    
-            $user = new User($username, $email, $hashPassword, "USER", new DateTime());
-            $um->create($user);
-    
-            if($user->getId() !== null)
+        if(isset($_POST["username"]) && isset($_POST["email"])
+            && isset($_POST["password"]) && isset($_POST["confirm-password"]))
+        {
+            $tokenManager = new CSRFTokenManager();
+            if(isset($_POST["csrf-token"]) && $tokenManager->validateCSRFToken($_POST["csrf-token"]))
             {
-                $_SESSION["user"] = $user;
-                $this->redirect("index.php");
+                if($_POST["password"] === $_POST["confirm-password"])
+                {
+                    $password_pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s])[A-Za-z\d^\w\s]{8,}$/';
+
+                    if (preg_match($password_pattern, $_POST["password"]))
+                    {
+                        $um = new UserManager();
+                        $user = $um->findByEmail($_POST["email"]);
+
+                        if($user === null)
+                        {
+                            $username = htmlspecialchars($_POST["username"]);
+                            $email = htmlspecialchars($_POST["email"]);
+                            $password = password_hash($_POST["password"], PASSWORD_BCRYPT);
+                            $user = new User($username, $email, $password);
+
+                            $um->create($user);
+
+                            $_SESSION["user"] = $user->getId();
+
+                            unset($_SESSION["error-message"]);
+
+                            $this->redirect("index.php");
+                        }
+                        else
+                        {
+                            $_SESSION["error-message"] = "User already exists";
+                            $this->redirect("index.php?route=register");
+                        }
+                    }
+                    else {
+                        $_SESSION["error-message"] = "Password is not strong enough";
+                        $this->redirect("index.php?route=register");
+                    }
+                }
+                else
+                {
+                    $_SESSION["error-message"] = "The passwords do not match";
+                    $this->redirect("index.php?route=register");
+                }
             }
             else
             {
-                   header("Location: index.php?route=register");
-                   exit();
+                $_SESSION["error-message"] = "Invalid CSRF token";
+                $this->redirect("index.php?route=register");
             }
         }
         else
         {
-             $this->redirect("index.php");
+            $_SESSION["error-message"] = "Missing fields";
+            $this->redirect("index.php?route=register");
         }
     }
-    
 
     public function logout() : void
     {
@@ -84,4 +126,29 @@ class AuthController extends AbstractController
 
         $this->redirect("index.php");
     }
+    public function __construct()
+    {
+        $lang = $_SESSION["lang"];
+
+        parent::__construct("auth", $lang);
+    }
+
+    public function getTranslator() : Translator
+    {
+        return $this->translator;
+    }
+    public function switchLang()
+    {
+        if($_SESSION["lang"] === "fr")
+        {
+            $_SESSION["lang"] = "en";
+        }
+        else
+        {
+            $_SESSION["lang"] = "fr";
+        }
+
+        $this->redirect("index.php");
+    }
+
 }

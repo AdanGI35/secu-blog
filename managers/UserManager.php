@@ -1,29 +1,57 @@
 <?php
 
-class UserManager extends AbstractManager {
 
-    public function findByEmail(string $email) : User
+class UserManager extends AbstractManager
+{
+    public function __construct()
     {
-        $query = $this->db->prepare('SELECT * FROM users WHERE email = :email');
-        $parameters = [
-            "email" => $email,
-        ];
-        $query->execute($parameters);
-        $user = $query->fetch(PDO::FETCH_ASSOC);
-
-        if($user !== null)
-        {
-            $item = new User($user["username"], $user["email"], $user["password"], $user["role"], DateTime::createFromFormat('Y-m-d H:i:s', $user["created_at"]));
-            $item->setId($user["id"]);
-        }
-        else
-        {
-            $item = new User("", "", "", "", new DateTime());
-        }
-
-        return $item;
+        parent::__construct();
     }
-    
+
+    public function findByEmail(string $email) : ? User
+    {
+        $query = $this->db->prepare('SELECT * FROM users WHERE email=:email');
+
+        $parameters = [
+            "email" => $email
+        ];
+
+        $query->execute($parameters);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        if($result)
+        {
+            $user = new User($result["username"], $result["email"], $result["password"], $result["role"]);
+            $user->setId($result["id"]);
+
+            return $user;
+        }
+
+        return null;
+    }
+
+    public function findOne(int $id) : ? User
+    {
+        $query = $this->db->prepare('SELECT * FROM users WHERE id=:id');
+
+        $parameters = [
+            "id" => $id
+        ];
+
+        $query->execute($parameters);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        if($result)
+        {
+            $user = new User($result["username"], $result["email"], $result["password"], $result["role"]);
+            $user->setId($result["id"]);
+
+            return $user;
+        }
+
+        return null;
+    }
+
     public function create(User $user) : void
     {
         $currentDateTime = date('Y-m-d H:i:s');
@@ -40,6 +68,6 @@ class UserManager extends AbstractManager {
         $query->execute($parameters);
 
         $user->setId($this->db->lastInsertId());
+
     }
 }
-?>

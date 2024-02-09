@@ -20,3 +20,6 @@ require "controllers/BlogController.php";
 /* SERVICES */
 require "services/CSRFTokenManager.php";
 require "services/Router.php";
+require "services/Translator.php";
+
+

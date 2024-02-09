@@ -1,46 +1,75 @@
 <?php
 
-class Comment {
-    private ?int $id = null;
-    
-    public function __construct(private string $content, private int $userId, private string $postId){
+class Comment
+{
+    private ? int $id = null;
+
+    public function __construct(private string $content, private User $user, private Post $post)
+    {
+
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
-    public function getContent() : string
-    {
-        return $this->content;
-    }
-    public function getUserId() : int
-    {
-        return $this->userId;
-    }
-    public function getPostId() : int
-    {
-        return $this->postId;
-    }
 
-
-
-
-    public function setId (int $id) : void
+    /**
+     * @param int|null $id
+     */
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
-    public function setContent (string $content) : void
+
+    /**
+     * @return string
+     */
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param string $content
+     */
+    public function setContent(string $content): void
     {
         $this->content = $content;
     }
-    public function setUserId (string $userId) : User
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
     {
-        $this->userId = $userId;
+        return $this->user;
     }
-    public function setPostId (string $postId) : Post
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
     {
-        $this->postId = $postId;
+        $this->user = $user;
+    }
+
+    /**
+     * @return Post
+     */
+    public function getPost(): Post
+    {
+        return $this->post;
+    }
+
+    /**
+     * @param Post $post
+     */
+    public function setPost(Post $post): void
+    {
+        $this->post = $post;
     }
 }
-?>

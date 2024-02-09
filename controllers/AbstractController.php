@@ -12,4 +12,10 @@ abstract class AbstractController
     {
         header("Location: $route");
     }
+    protected Translator $translator;
+
+    public function __construct(string $file, protected string $currentLang = "fr")
+    {
+        $this->translator = new Translator($file, $this->currentLang);
+    }
 }

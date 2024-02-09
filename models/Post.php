@@ -1,61 +1,124 @@
 <?php
 
-class Post {
-    private ?int $id = null;
-    
-    public function __construct(private string $title, private string $excerpt, private string $content, private int $author, private DateTime $createdAt){
+class Post
+{
+    private ? int $id = null;
+    private array $categories = [];
+
+    public function __construct(private string $title, private string $excerpt, private string $content, private User $author, private DateTime $createdAt = new DateTime())
+    {
+
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
-    public function getTitle() : string
+
+    /**
+     * @param int|null $id
+     */
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
     {
         return $this->title;
     }
-    public function getExcerpt() : string
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExcerpt(): string
     {
         return $this->excerpt;
     }
-    public function getContent() : string
+
+    /**
+     * @param string $excerpt
+     */
+    public function setExcerpt(string $excerpt): void
+    {
+        $this->excerpt = $excerpt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent(): string
     {
         return $this->content;
     }
-    public function getAuthor() : int
+
+    /**
+     * @param string $content
+     */
+    public function setContent(string $content): void
+    {
+        $this->content = $content;
+    }
+
+    /**
+     * @return User
+     */
+    public function getAuthor(): User
     {
         return $this->author;
     }
-    public function getCreatedAt() : DateTime
+
+    /**
+     * @param User $author
+     */
+    public function setAuthor(User $author): void
+    {
+        $this->author = $author;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
 
-
-
-    public function setId (int $id) : void
-    {
-        $this->id = $id;
-    }
-    public function setTitle (string $title) : void
-    {
-        $this->title = $title;
-    }
-    public function setExcerpt (string $excerpt) : void
-    {
-        $this->excerpt = $excerpt;
-    }
-    public function setContent (string $content) : void
-    {
-        $this->content = $content;
-    }
-    public function setAuthor (string $author) : void
-    {
-        $this->author = $author;
-    }
-    public function setCreatedAt (DateTime $createAt) : void
+    /**
+     * @param DateTime $createdAt
+     */
+    public function setCreatedAt(DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
+
+    /**
+     * @return array
+     */
+    public function getCategories(): array
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param array $categories
+     */
+    public function setCategories(array $categories): void
+    {
+        $this->categories = $categories;
+    }
 }
-?>
